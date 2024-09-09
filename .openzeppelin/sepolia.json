@@ -1,0 +1,240 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0xC3d40E61de2cfD91e1E65704947A8624c6FEEb88",
+      "txHash": "0xd989355b49bcb9e8637a21a2ba4aec6804ceb8597e9540b588279e7aa084fdb3",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x928Cb5cA28cB1a2844A1286111eAf08126899B10",
+      "txHash": "0x27f9fac0d664c99ffd04f981034e910f1aff13e96a194626cf0d3efb2530d835",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "b39ecc92e462d95a324552ef876e78ad9d42728640c7ad30e4a410110c9dad27": {
+      "address": "0x49EB037864F15C0fECEE0B30a838e6800e5cB1be",
+      "txHash": "0x265d143d64799fe74cfee82e5768181973159980bac806eb76970fb82782ae98",
+      "layout": {
+        "solcVersion": "0.8.26",
+        "storage": [
+          {
+            "label": "games",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_uint8,t_struct(GameInfo)276_storage)",
+            "contract": "Bingo",
+            "src": "contracts/Bingo.sol:27"
+          },
+          {
+            "label": "boards",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_uint8,t_mapping(t_address,t_array(t_array(t_uint8)5_storage)5_storage))",
+            "contract": "Bingo",
+            "src": "contracts/Bingo.sol:28"
+          },
+          {
+            "label": "drawnBoards",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint8,t_mapping(t_address,t_array(t_array(t_uint8)5_storage)5_storage))",
+            "contract": "Bingo",
+            "src": "contracts/Bingo.sol:29"
+          },
+          {
+            "label": "players",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_uint8,t_mapping(t_address,t_bool))",
+            "contract": "Bingo",
+            "src": "contracts/Bingo.sol:30"
+          },
+          {
+            "label": "creatorGame",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_address,t_uint8)",
+            "contract": "Bingo",
+            "src": "contracts/Bingo.sol:31"
+          },
+          {
+            "label": "gameIndex",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint8",
+            "contract": "Bingo",
+            "src": "contracts/Bingo.sol:32"
+          },
+          {
+            "label": "owner",
+            "offset": 1,
+            "slot": "5",
+            "type": "t_address",
+            "contract": "Bingo",
+            "src": "contracts/Bingo.sol:33"
+          },
+          {
+            "label": "erc20",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_contract(IERC20)1132",
+            "contract": "Bingo",
+            "src": "contracts/Bingo.sol:34"
+          }
+        ],
+        "types": {
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)7_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_array(t_uint8)5_storage)5_storage": {
+            "label": "uint8[5][5]",
+            "numberOfBytes": "160"
+          },
+          "t_array(t_uint8)5_storage": {
+            "label": "uint8[5]",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IERC20)1132": {
+            "label": "contract IERC20",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_array(t_uint8)5_storage)5_storage)": {
+            "label": "mapping(address => uint8[5][5])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint8)": {
+            "label": "mapping(address => uint8)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_address,t_array(t_array(t_uint8)5_storage)5_storage))": {
+            "label": "mapping(uint8 => mapping(address => uint8[5][5]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_address,t_bool))": {
+            "label": "mapping(uint8 => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(GameInfo)276_storage)": {
+            "label": "mapping(uint8 => struct Bingo.GameInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(GameInfo)276_storage": {
+            "label": "struct Bingo.GameInfo",
+            "members": [
+              {
+                "label": "startDuration",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "turnDuration",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "winningPrice",
+                "type": "t_uint8",
+                "offset": 1,
+                "slot": "1"
+              },
+              {
+                "label": "entryFee",
+                "type": "t_uint8",
+                "offset": 2,
+                "slot": "1"
+              },
+              {
+                "label": "playersLimit",
+                "type": "t_uint8",
+                "offset": 3,
+                "slot": "1"
+              },
+              {
+                "label": "generatedNumber",
+                "type": "t_uint8",
+                "offset": 4,
+                "slot": "1"
+              },
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 5,
+                "slot": "1"
+              },
+              {
+                "label": "winner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
