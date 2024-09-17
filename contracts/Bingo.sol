@@ -4,6 +4,7 @@ import "./IERC20.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract Bingo is Initializable{
+    
     /*
     turnDuration - minimum time to drawn number
     startDuration - timer to start the game
@@ -24,10 +25,25 @@ contract Bingo is Initializable{
         address owner;
         address winner;
     }
+
+    /// @notice Stores game information using gameId as the key
+    /// @dev Maps a uint8 gameId to the GameInfo struct
     mapping(uint8 gameId => GameInfo) public games;
+
+    /// @notice Stores the player's bingo board for each game
+    /// @dev Maps a uint8 gameId and an address (user) to a 5x5 uint8 board for the game
     mapping(uint8 gameId => mapping(address user => uint8[5][5] board)) public boards;
+
+    /// @notice Stores the numbers that have been drawn for each player in a specific game
+    /// @dev Maps a uint8 gameId and an address (user) to a 5x5 uint8 drawn board
     mapping(uint8 gameId => mapping(address user => uint8[5][5] board)) public drawnBoards;
+
+    /// @notice Keeps track of the players who have joined a game
+    /// @dev Maps a uint8 gameId and an address to a boolean indicating if the player is in the game
     mapping(uint8 gameId => mapping(address => bool)) public players;
+
+    /// @notice Stores the gameId created by each user
+    /// @dev Maps an address (creator) to the uint8 gameId that the user created
     mapping(address creator => uint8 gameId) public creatorGame;
 
     uint8 private gameIndex;
@@ -40,7 +56,20 @@ contract Bingo is Initializable{
     error GameAlreadyStarted();
     error ZeroUserFound();
 
+    modifier checkUsers(uint8 _noOfUsers) {
+        if (_noOfUsers <= 0) 
+            revert ZeroUserFound();
+        _;
+    }
+
+    modifier checkAuthorization(uint8 gameId) {
+        if (games[gameId].owner != msg.sender) 
+            revert Unauthorized(msg.sender);
+        _;
+    }
+
     /// @notice open zeppelin initializer function for transparent proxy
+    /// @param erc20Address The address of the ERC20 token contract
     function initialize(
         address erc20Address
     ) public payable initializer {
@@ -50,15 +79,16 @@ contract Bingo is Initializable{
     }
 
     /// @notice create a new game and add in "games" mapping
+    /// @param _noOfUsers The number of users that can join the game
+    /// @param _entryFee The entry fee for players to join the game
+    /// @param _startDuration The time (in seconds) before the game starts
+    /// @param _turnDuration The duration of each turn in the game
     function createGame(
         uint8 _noOfUsers,
         uint8 _entryFee,
         uint256 _startDuration,
         uint8 _turnDuration
-    ) public {
-        if (_noOfUsers <= 0) 
-            revert ZeroUserFound();
-        else {
+    ) external checkUsers(_noOfUsers){
             gameIndex++;
             GameInfo memory game = GameInfo(
                 block.timestamp + _startDuration,
@@ -72,28 +102,31 @@ contract Bingo is Initializable{
             );
             games[gameIndex] = game;
             creatorGame[msg.sender] = gameIndex;
-        }
     }
 
     /// @notice update the entry fees of any game. Can only be access by owner of a game
-    function updatefee(uint8 gameId, uint8 _fee) public  {
-        if (games[gameId].owner != msg.sender) revert Unauthorized(msg.sender);
+    /// @param gameId The ID of the game to update
+    /// @param _fee The new entry fee for the game
+    function updatefee(uint8 gameId, uint8 _fee) public  checkAuthorization(gameId){
         games[gameId].entryFee = _fee;
     }
 
     /// @notice update the turn duration of any game. Can only be access by owner of a game
-    function updateTurnDuration(uint8 gameId, uint8 duration) public {
-        if (games[gameId].owner != msg.sender) revert Unauthorized(msg.sender);
+    /// @param gameId The ID of the game to update
+    /// @param duration The new turn duration in seconds
+    function updateTurnDuration(uint8 gameId, uint8 duration) public checkAuthorization(gameId){
         games[gameId].turnDuration = duration;
     }
 
     /// @notice update the start duration of any game. Can only be access by owner of a game
-    function updateStartDuration(uint8 gameId, uint8 duration) public {
-        if (games[gameId].owner != msg.sender) revert Unauthorized(msg.sender);
+    /// @param gameId The ID of the game to update
+    /// @param duration The new start duration in seconds
+    function updateStartDuration(uint8 gameId, uint8 duration) public checkAuthorization(gameId){
         games[gameId].startDuration = block.timestamp + duration;
     }
 
     /// @notice any user can join a game using the _gameId.
+    /// @param _gameId The ID of the game to join
     function joinGame(uint8 _gameId) public {
         if (games[_gameId].startDuration > block.timestamp) {
             if (erc20.allowance(msg.sender,address(this)) < games[_gameId].entryFee) 
@@ -118,6 +151,7 @@ contract Bingo is Initializable{
     }
 
     /// @notice generates a random number for difference games
+    /// @param _gameId The ID of the game to join
     function generateRandomNumber(
         uint8 _gameId
     ) public{
@@ -128,6 +162,8 @@ contract Bingo is Initializable{
     }
 
     /// @notice updates the drawnBoard of a user by the provided number. This will keep track of drawned number of any user in drawnBoards mapping.
+    /// @param _gameId The ID of the game to join
+    /// @param _number The number that has been drawn
     function drawnNumber(
         uint8 _gameId,
         uint8 _number
@@ -148,11 +184,14 @@ contract Bingo is Initializable{
     }
 
     /// @notice returns a boolean value, whether game started or not.
+    /// @param _gameId The ID of the game to check
+    /// @return A boolean value indicating if the game has started
     function isGameStarted(uint8 _gameId) public view returns (bool) {
         return games[_gameId].owner!=address(0) && block.timestamp >= games[_gameId].startDuration;
     }
 
     /// @notice user check whether it becomes the winner of the game or not.
+    /// @param _gameId The ID of the game to check
     function checkWinner(uint8 _gameId) public returns(bool) {
         //checking rows
         uint8 row = 0;
