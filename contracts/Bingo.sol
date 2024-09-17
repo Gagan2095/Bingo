@@ -4,7 +4,6 @@ import "./IERC20.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract Bingo is Initializable{
-    
     /*
     turnDuration - minimum time to drawn number
     startDuration - timer to start the game
@@ -51,9 +50,18 @@ contract Bingo is Initializable{
 
     IERC20 erc20;
 
+
+    /// @notice Thrown when the funds provided are insufficient for the operation
     error InsufficientFund();
-    error Unauthorized(address);
+
+    /// @notice Thrown when an unauthorized user tries to perform an action
+    /// @param user The address of the unauthorized user
+    error Unauthorized(address user);
+
+    /// @notice Thrown when attempting to start a game that has already started
     error GameAlreadyStarted();
+
+    /// @notice Thrown when a zero or invalid user is found in the operation
     error ZeroUserFound();
 
     modifier checkUsers(uint8 _noOfUsers) {
