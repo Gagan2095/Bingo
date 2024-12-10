@@ -147,10 +147,11 @@ contract Bingo is Initializable{
                         if (j == 2 && k == 2)
                             boards[_gameId][msg.sender][j][k] = 100;
                         else{
-                            boards[_gameId][msg.sender][j][k] = uint8(uint(keccak256(abi.encodePacked(block.timestamp,msg.sender))) %51);
+                            boards[_gameId][msg.sender][j][k] = uint8(uint(keccak256(abi.encodePacked(block.timestamp,msg.sender,j,k))) %50) + 1;
                         }
                     }
                 }
+                drawnBoards[_gameId][msg.sender][2][2] = 100;
             }
             players[_gameId][msg.sender] = true;
         } else {
@@ -178,14 +179,10 @@ contract Bingo is Initializable{
     ) public {
         if (!players[_gameId][msg.sender])
             revert Unauthorized(msg.sender);
-        uint itr1 = 0;
-        uint itr2 = 0;
         for (uint i = 0; i < 5; i++) {
             for (uint j = 0; j < 5; j++) {
                 if (boards[_gameId][msg.sender][i][j] == _number) {
                     drawnBoards[_gameId][msg.sender][i][j] = 100;
-                    itr1 = i;
-                    itr2 = j;
                 }
             }
         }
@@ -200,7 +197,7 @@ contract Bingo is Initializable{
 
     /// @notice user check whether it becomes the winner of the game or not.
     /// @param _gameId The ID of the game to check
-    function checkWinner(uint8 _gameId) public returns(bool) {
+    function checkWinner(uint8 _gameId) public {
         //checking rows
         uint8 row = 0;
         for(uint i = 0;i<drawnBoards[_gameId][msg.sender].length;i++) {
@@ -236,7 +233,7 @@ contract Bingo is Initializable{
         }
         if(temp) diagonal++;
         temp = true;
-        for (uint256 i = drawnBoards[_gameId][msg.sender].length-1; i>=0; i++) {
+        for (uint256 i = drawnBoards[_gameId][msg.sender].length-1; i>=0; i--) {
             if(drawnBoards[_gameId][msg.sender][drawnBoards[_gameId][msg.sender].length-1-i][i]!=100){
                 temp = false;
                 break;
@@ -245,8 +242,8 @@ contract Bingo is Initializable{
         if(temp) diagonal++;
         if(row+col+diagonal>=5) {
             erc20.transfer(msg.sender, games[_gameId].winningPrice);
-            return true;
+            games[_gameId].winner = msg.sender;
         }
-        else return false;
+        else return;
     }
 }
